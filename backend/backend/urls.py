@@ -1,3 +1,7 @@
+from django.contrib import admin
+from django.urls import include, path, re_path
+from chat import consumers
+from chat.consumer.drawboard_consumer import DrawboardConsumer
 """
 URL configuration for backend project.
 
@@ -14,9 +18,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('chat/', include('chat.urls')),  # chat 앱의 URLconf를 포함
+    path('accounts/', include('allauth.urls')),
+    path('drawboard/',include('chat.urls')),
+    path('ws/chat/<str:room_name>/', consumers.ChatConsumer.as_asgi()),
+    path('ws/drawboard/<str:drawboard_id>/', DrawboardConsumer.as_asgi()),
 ]

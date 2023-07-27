@@ -25,19 +25,47 @@ SECRET_KEY = 'django-insecure-463x%p*@iymz^u&%_*j53%@**v^q0w3(_!%)$rur_4$(cv^rtf
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
+    "chat.apps.chatConfig",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-]
+    "rest_framework",
+    'django.contrib.sites',  # 추가된 부분
+    'allauth',  # 추가된 부분
+    'allauth.account',  # 추가된 부분
+    'allauth.socialaccount',  # 추가된 부분
+    #'allauth.socialaccount.providers.naver', #네이버 로그인
+    'allauth.socialaccount.providers.kakao',  # 추가: 카카오 로그인
+    'corsheaders', ##보안
+    'channels',
+    'django_private_chat2',
+    ]
+
+
+ASGI_APPLICATION = "backend.asgi.application"
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379)],
+        },
+    },
+}
+
+
+
+# ASGI_APPLICATION = 'backend.chat.routing.application'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -47,6 +75,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware', ##보안
+    'corsheaders.middleware.CorsMiddleware', ##보안
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -121,3 +151,23 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SITE_ID = 1
+
+ACCOUNT_EMAIL_VERIFICATION = "none"
+
+LOGIN_REDIRECT_URL = '/'
+
+# CORS 추가
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_METHODS = ['GET', 'POST']
+
+CORS_ALLOW_CREDENTIALS = True
+#ROOT_URLCONF = "sogong.urls"
+APPEND_SLASH = False
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
